@@ -1,19 +1,31 @@
+import { useEffect } from 'react';
 import { useQuery } from "react-query";
-import ErrorMessageComponent from "../../ErrorMessageComponent"
-import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
-import { PostFormData } from "../../../types/post.type";
+import { Control, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch, Controller } from 'react-hook-form';
+import { generateSlug } from '../../../utils/utils';
 import { getCategoriesAll } from "../../../services/CategoryService";
 import { getTags } from "../../../services/TagService";
-import Select from "react-select";
+import { PostFormData } from "../../../types/post.type";
+import ErrorMessageComponent from "../../ErrorMessageComponent"
+import TextEditorComponent from './TextEditorComponent';
+import Select from 'react-select'
+
 
 type PostFormComponentProps = {
     register: UseFormRegister<PostFormData>
     errors: FieldErrors<PostFormData>
     control: Control<PostFormData, any>
-
+    watch: UseFormWatch<PostFormData>
+    setValue: UseFormSetValue<PostFormData>
 }
 
-export default function PostFormComponent({ register, errors, control }: PostFormComponentProps) {
+export default function PostFormComponent({ register, errors, control, watch, setValue }: PostFormComponentProps) {
+    const title = watch('title');
+
+    useEffect(() => {
+        const newSlug = generateSlug(title)
+        setValue('slug', newSlug);
+    }, [title, setValue])
+
 
     const { data: categories } = useQuery({
         queryKey: ['categoriesSelect'],
@@ -80,10 +92,21 @@ export default function PostFormComponent({ register, errors, control }: PostFor
                 <label htmlFor="content" className="text-sm uppercase font-bold">
                     Content
                 </label>
-                <textarea
+                {/* <textarea
                     id="content"
                     className="w-full p-3 border border-gray-200"
                     placeholder="Post content"
+                    {...register("content", {
+                        required: "Content required"
+                    })}
+                /> */}
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, value } }) => {
+                        return (
+                            <TextEditorComponent value={value} onChange={onChange} />
+                        )
+                    }}
                     {...register("content", {
                         required: "Content required"
                     })}
@@ -131,21 +154,27 @@ export default function PostFormComponent({ register, errors, control }: PostFor
                 </div>
                 <div className='mb-5 space-y-3 w-full'>
                     <label htmlFor="tag_id" className='text-sm uppercase font-bold'>Tags</label>
-                    {/* {tags && (
+                    {tags && (
                         <Controller
                             name="tags"
                             control={control}
                             render={({ field: { onChange, value } }) => (
                                 <Select
-                                    isMulti
                                     name="tags"
-                                    options={tags}
-                                    value={tags.filter((tag) => value.includes(tag))}
+                                    isMulti
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                    options={tags.map(tag => ({ value: tag.id, label: tag.name }))}
+                                    value={value?.map(tag => ({ value: tag.id, label: tag.name }))}
+                                    onChange={(selected) => {
+                                        // Convierte el formato de opciones seleccionadas al formato esperado por el controlador
+                                        onChange(selected ? selected.map(item => ({ id: item.value, name: item.label })) : []);
+                                    }}
                                 />
                             )}
                         />
-                    )} */}
-                    <select
+                    )}
+                    {/* <select
                         id='tag_id'
                         multiple
                         className='w-full p-3 border border-gray-200'
@@ -155,7 +184,7 @@ export default function PostFormComponent({ register, errors, control }: PostFor
                         {tags && tags.map(tag => (
                             <option key={tag.id} value={tag.id}>{tag.name}</option>
                         ))}
-                    </select>
+                    </select> */}
                     {errors.tags && (
                         <ErrorMessageComponent>{errors.tags.message}</ErrorMessageComponent>
                     )}

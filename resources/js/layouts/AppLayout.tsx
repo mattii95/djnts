@@ -1,6 +1,7 @@
 
 import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { Link, Outlet } from 'react-router-dom'
+import FooterComponent from '../components/FooterComponent'
 
 export default function AppLayout() {
     return (
@@ -15,7 +16,13 @@ export default function AppLayout() {
                             className='hover:text-indigo-600 active:text-indigo-600'
                             to={'/'}
                         >
-                            Inicio
+                            Home
+                        </Link>
+                        <Link
+                            className='hover:text-indigo-600 active:text-indigo-600'
+                            to={'/radio'}
+                        >
+                            Radio
                         </Link>
                         <Link
                             className='hover:text-indigo-600 active:text-indigo-600'
@@ -32,9 +39,7 @@ export default function AppLayout() {
             <main className='w-full'>
                 <Outlet />
             </main>
-            <footer className=''>
-                footer
-            </footer>
+            <FooterComponent />
         </div>
     )
 }

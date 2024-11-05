@@ -13,6 +13,9 @@ export default function EditPostView() {
         retry: false
     })
 
+    console.log(data);
+    
+
     if(isLoading) return 'Loading...'
     if (isError) return <Navigate to={'/404'} />
     if (data) return <EditPostFormComponent post={data} />

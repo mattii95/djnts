@@ -23,8 +23,8 @@ export default function EditPostFormComponent({ post }: EditPostFormComponentPro
         image: '',
         tags: []
     };
-    
-    const { register, handleSubmit, formState: { errors }, reset, control } = useForm({ defaultValues: initialValues })
+
+    const { register, handleSubmit, formState: { errors }, reset, control, watch, setValue } = useForm({ defaultValues: initialValues })
 
     useEffect(() => {
         if (post) {
@@ -38,6 +38,7 @@ export default function EditPostFormComponent({ post }: EditPostFormComponentPro
                 image: post.image,
                 tags: post.tags
             })
+            setValue('category_id', post.category_id);
         }
     }, [post, reset])
 
@@ -63,9 +64,11 @@ export default function EditPostFormComponent({ post }: EditPostFormComponentPro
         formDataToSend.append('content', formData.content);
         formDataToSend.append('posted', formData.posted);
         formDataToSend.append('category_id', formData.category_id.toString());
-
+        formData.tags.forEach(tag => {
+            formDataToSend.append('tags[]', `${tag.id}`)
+        })
         if (formData.image[0]) {
-            formDataToSend.append('image', formData.image[0]); 
+            formDataToSend.append('image', formData.image[0]);
         }
         formDataToSend.append('_method', 'put')
 
@@ -75,7 +78,7 @@ export default function EditPostFormComponent({ post }: EditPostFormComponentPro
 
     return (
         <>
-             <div className='text-sm text-slate-400 flex gap-2 items-center'>
+            <div className='text-sm text-slate-400 flex gap-2 items-center'>
                 <Link to={'/dashboard'} className="hover:text-slate-500">Home</Link>
                 <ChevronRightIcon className="size-4" />
                 <Link to={'/dashboard/post'} className="hover:text-slate-500">Post</Link>
@@ -99,6 +102,8 @@ export default function EditPostFormComponent({ post }: EditPostFormComponentPro
                     register={register}
                     errors={errors}
                     control={control}
+                    watch={watch}
+                    setValue={setValue}
                 />
                 <input
                     type="submit"

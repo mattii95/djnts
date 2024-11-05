@@ -19,7 +19,7 @@ export default function CreatePostView() {
         tags: []
     };
 
-    const { register, handleSubmit, formState: { errors }, control } = useForm({ defaultValues: initialValues });
+    const { register, handleSubmit, formState: { errors }, control, watch, setValue } = useForm({ defaultValues: initialValues });
 
     const { mutate } = useMutation({
         mutationFn: createPost,
@@ -76,6 +76,8 @@ export default function CreatePostView() {
                     register={register}
                     errors={errors}
                     control={control}
+                    watch={watch}
+                    setValue={setValue}
                 />
                 <input
                     type="submit"
