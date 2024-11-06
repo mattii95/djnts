@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\Image;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,5 +42,9 @@ class Post extends Model
 
     public function tags() {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function image() {
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

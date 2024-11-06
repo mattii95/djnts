@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Post;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -33,13 +34,19 @@ class PostController extends Controller
 
         $filename = time() . '.' . $request->file('image')->extension();
         $request->file('image')->move(public_path('uploads/images'), $filename);
-        $post->image = $filename;
+        // $post->image = $filename;
 
         auth()->user()->posts()->save($post);
 
         if ($request->tags) {
             $post->tags()->sync($request->tags);
         }
+
+        // Guardar imagen
+        $post->image()->save(new Image([
+            'name'=> $filename,
+        ]));
+
         // Eliminar cache
         Cache::forget('post_all');
         return response()->json($post);

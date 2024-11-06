@@ -13,6 +13,7 @@ import TagView from "./views/dashboard/tags/TagView";
 import AppLayout from "./layouts/AppLayout";
 import IndexView from "./views/IndexView";
 import BlogView from "./views/BlogView";
+import RadioView from "./views/RadioView";
 
 export default function Router() {
     return (
@@ -21,6 +22,7 @@ export default function Router() {
                 <Route element={<AppLayout />} >
                     <Route path="/" element={<IndexView />} index />
                     <Route path="/blog" element={<BlogView />} />
+                    <Route path="/radio" element={<RadioView />} />
                 </Route>
                 <Route path="dashboard" element={<AuthLayout />} >
                     <Route path="auth/login" element={<LoginView />} />

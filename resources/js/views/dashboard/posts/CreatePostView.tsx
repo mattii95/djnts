@@ -44,7 +44,7 @@ export default function CreatePostView() {
         formDataToSend.append('category_id', formData.category_id.toString());
         formDataToSend.append('image', formData.image[0]);
         formData.tags.forEach(tag => {
-            formDataToSend.append('tags[]', `${tag}`)
+            formDataToSend.append('tags[]', `${tag.id}`)
         })
 
         mutate(formDataToSend);

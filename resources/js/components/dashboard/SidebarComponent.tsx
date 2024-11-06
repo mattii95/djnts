@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { HomeIcon, DocumentTextIcon, PaperClipIcon, UserGroupIcon, LockOpenIcon, UserIcon, TagIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, DocumentTextIcon, PaperClipIcon, UserGroupIcon, LockOpenIcon, UserIcon, TagIcon, GlobeAltIcon, ArrowUpRightIcon } from "@heroicons/react/24/outline";
 
 export default function SidebarComponent() {
     const location = useLocation()
@@ -63,6 +63,15 @@ export default function SidebarComponent() {
                     <UserIcon className="size-5" />
                     Users
                 </Link>
+                <a
+                    href={import.meta.env.VITE_BASE_URL}
+                    target="_blank"
+                    className={`flex items-center gap-2 px-8 font-bold text-lg text-white uppercase hover:bg-indigo-700 py-4 transition-colors `}
+                >
+                    <GlobeAltIcon className="size-5" />
+                        Web
+                    <ArrowUpRightIcon className="size-3" />
+                </a>
             </nav>
         </aside>
     )
